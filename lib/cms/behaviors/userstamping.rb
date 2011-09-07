@@ -16,7 +16,7 @@ module Cms
           belongs_to :created_by, :class_name => "User"
           belongs_to :updated_by, :class_name => "User"
 
-          before_save :set_userstamps
+          before_save :set_userstamps if User.current
 
           scope :created_by, lambda{|user| {:conditions => {:created_by => user}}}
           scope :updated_by, lambda{|user| {:conditions => {:updated_by => user}}}
