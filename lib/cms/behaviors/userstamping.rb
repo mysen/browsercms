@@ -16,7 +16,7 @@ module Cms
           belongs_to :created_by, :class_name => "User"
           belongs_to :updated_by, :class_name => "User"
 
-          before_save :set_userstamps if User.current
+          before_save :set_userstamps
 
           scope :created_by, lambda{|user| {:conditions => {:created_by => user}}}
           scope :updated_by, lambda{|user| {:conditions => {:updated_by => user}}}
@@ -26,10 +26,11 @@ module Cms
       end
       module InstanceMethods
         def set_userstamps
+          current_user = (User.current && User.current.kind_of?(User)) ? User.current : nil
           if new_record?
-            self.created_by = User.current
+            self.created_by = current_user
           end
-          self.updated_by = User.current
+          self.updated_by = current_user
         end
       end
     end
