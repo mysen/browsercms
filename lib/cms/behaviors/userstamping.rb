@@ -4,7 +4,7 @@ module Cms
       def self.included(model_class)
         model_class.extend(MacroMethods)
       end
-      module MacroMethods      
+      module MacroMethods
         def userstamped?
           !!@is_userstamped
         end
@@ -12,25 +12,24 @@ module Cms
           @is_userstamped = true
           extend ClassMethods
           include InstanceMethods
-        
+
           belongs_to :created_by, :class_name => "User"
           belongs_to :updated_by, :class_name => "User"
-        
+
           before_save :set_userstamps
-        
+
           scope :created_by, lambda{|user| {:conditions => {:created_by => user}}}
-          scope :updated_by, lambda{|user| {:conditions => {:updated_by => user}}}        
+          scope :updated_by, lambda{|user| {:conditions => {:updated_by => user}}}
         end
       end
       module ClassMethods
       end
       module InstanceMethods
         def set_userstamps
-          current_user = User.current ? User.current : nil
           if new_record?
-            self.created_by = current_user
+            self.created_by = User.current
           end
-          self.updated_by = current_user
+          self.updated_by = User.current
         end
       end
     end
